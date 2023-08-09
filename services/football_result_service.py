@@ -2,7 +2,7 @@
 import pandas as pd
 from datetime import date
 from entities.league import League
-from services.football_fields import FootballFields
+from services.football_fields import FootballField
 from services.football_data_service import FootballDataService
 
 class FootballResultService(FootballDataService):
@@ -13,7 +13,7 @@ class FootballResultService(FootballDataService):
         for i, url in enumerate(url_list):
             try:
                 mathes_df = pd.read_csv(url)
-                mathes_df['Season'] = league.year_start + i
+                mathes_df[FootballField.RESULT.value] = league.year_start + i
                 matches.append(mathes_df)
             except:
                 break
@@ -22,14 +22,14 @@ class FootballResultService(FootballDataService):
     def _get_fixtures(self, mathes_df: pd.DataFrame) -> pd.DataFrame:
         mathes_df = mathes_df[['Date', 'Season', 'HomeTeam', 'AwayTeam', 'B365H', 'B365D', 'B365A', 'FTHG', 'FTAG', 'FTR']]
         mathes_df = mathes_df.rename(columns={
-            'HomeTeam': FootballFields.HOMETEAM.value,
-            'AwayTeam': FootballFields.AWAYTEAM.value,
-            'B365H': FootballFields.HOMEPERCENT.value,
-            'B365D': FootballFields.DRAWPERCENT.value,
-            'B365A': FootballFields.AWAYPERCENT.value,
-            'FTHG': FootballFields.HOMEGOAL.value,
-            'FTAG': FootballFields.AWAYGOAL.value,
-            'FTR': FootballFields.RESULT.value})
+            'HomeTeam': FootballField.HOMETEAM.value,
+            'AwayTeam': FootballField.AWAYTEAM.value,
+            'B365H': FootballField.HOMEPERCENT.value,
+            'B365D': FootballField.DRAWPERCENT.value,
+            'B365A': FootballField.AWAYPERCENT.value,
+            'FTHG': FootballField.HOMEGOAL.value,
+            'FTAG': FootballField.AWAYGOAL.value,
+            'FTR': FootballField.RESULT.value})
         return mathes_df
 
     def _generate_url_list(self, league: League) -> list[str]:

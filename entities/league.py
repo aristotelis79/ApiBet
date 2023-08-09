@@ -29,7 +29,7 @@ class League:
         return self._fixtures_url
     
     @property
-    def year_start(self) -> str:
+    def year_start(self) -> int:
         return self._year_start
     
     @year_start.setter
