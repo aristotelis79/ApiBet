@@ -12,10 +12,10 @@ class FootballNewResultService(FootballDataService):
     def _get_fixtures(self, matches: pd.DataFrame) -> pd.DataFrame:
         matches = matches[['Date', 'Season', 'Home', 'Away', 'AvgH', 'AvgD', 'AvgA', 'HG', 'AG', 'Res']]
         matches = matches.rename(columns={
-            'Home': FootballFields.HOMETEAM,
-            'Away': FootballFields.AWAYTEAM,
-            'AvgH': FootballFields.HOMEPERCENT,
-            'AvgD': FootballFields.DRAWPERCENT,
-            'AvgA': FootballFields.AWAYPERCENT,
-            'Res': FootballFields.RESULT,
+            'Home': FootballFields.HOMETEAM.value,
+            'Away': FootballFields.AWAYTEAM.value,
+            'AvgH': FootballFields.HOMEPERCENT.value,
+            'AvgD': FootballFields.DRAWPERCENT.value,
+            'AvgA': FootballFields.AWAYPERCENT.value,
+            'Res': FootballFields.RESULT.value,
         })

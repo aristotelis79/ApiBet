@@ -31,6 +31,10 @@ class LeagueRepository:
             table = pa.Table.from_pandas(df)
             pa.parquet.write_table(table, self._league_table(league.country, league.name))
 
+    def to_csv(self, df: pd.DataFrame, league: League) -> None:
+        league_filepath = f'{self._saved_leagues_directory}{league.country}{league.name}.csv'
+        df.to_csv(league_filepath, index=False)
+
     def _get_all_available_leagues(self) -> dict:
         with open(file=constants.AVAILABLE_LEAGUES_FILEPATH, mode='r', encoding='utf=8') as csvfile:
             reader = csv.reader(csvfile, delimiter=',')

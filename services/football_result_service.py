@@ -22,14 +22,14 @@ class FootballResultService(FootballDataService):
     def _get_fixtures(self, mathes_df: pd.DataFrame) -> pd.DataFrame:
         mathes_df = mathes_df[['Date', 'Season', 'HomeTeam', 'AwayTeam', 'B365H', 'B365D', 'B365A', 'FTHG', 'FTAG', 'FTR']]
         mathes_df = mathes_df.rename(columns={
-            'HomeTeam': FootballFields.HOMETEAM,
-            'AwayTeam': FootballFields.AWAYTEAM,
-            'B365H': FootballFields.HOMEPERCENT,
-            'B365D': FootballFields.DRAWPERCENT,
-            'B365A': FootballFields.AWAYPERCENT,
-            'FTHG': FootballFields.HOMEGOAL,
-            'FTAG': FootballFields.AWAYGOAL,
-            'FTR': FootballFields.RESULT})
+            'HomeTeam': FootballFields.HOMETEAM.value,
+            'AwayTeam': FootballFields.AWAYTEAM.value,
+            'B365H': FootballFields.HOMEPERCENT.value,
+            'B365D': FootballFields.DRAWPERCENT.value,
+            'B365A': FootballFields.AWAYPERCENT.value,
+            'FTHG': FootballFields.HOMEGOAL.value,
+            'FTAG': FootballFields.AWAYGOAL.value,
+            'FTR': FootballFields.RESULT.value})
         return mathes_df
 
     def _generate_url_list(self, league: League) -> list[str]:
