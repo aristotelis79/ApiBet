@@ -5,7 +5,6 @@ from entities.league import League
 from services.football_fields import FootballFields
 from services.football_data_service import FootballDataService
 
-
 class FootballResultService(FootballDataService):
     
     def _download(self, league: League) -> pd.DataFrame:

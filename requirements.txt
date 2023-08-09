@@ -3,3 +3,5 @@ uvicorn
 pandas
 requests
 numpy
+pyarrow
+pydantic

@@ -1,23 +1,13 @@
 from repository.league_repository import LeagueRepository
-from services.football_data_service import FootballDataService
-from services.football_result_service import FootballResultService
-from entities.league import League
+from services.football_service import FootballService
 from fastapi import Depends, FastAPI
 import json
-
-from services.football_upcoming_result_service import FootballNewResultService
 
 api = FastAPI()
 
 @api.get("/leagues")
-def leagues(country: str, division: str, repository: LeagueRepository = Depends()):
-    league : League = repository.get_all_available_leagues()[(country,division)]
-
-    if league.league_type == 'main':
-        matches = FootballResultService().download(league=league)
-    elif league.league_type == 'new':
-        matches = FootballNewResultService().download(league=league)
-
+def leagues(country: str, division: str, footbal_service: FootballService = Depends()):
+    matches = footbal_service.get_league_matches(country, division)
     return json.loads(matches.to_json())
 
 if __name__ == '__main__':
