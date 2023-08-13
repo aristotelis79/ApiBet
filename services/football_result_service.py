@@ -13,7 +13,7 @@ class FootballResultService(FootballDataService):
         for i, url in enumerate(url_list):
             try:
                 mathes_df = pd.read_csv(url)
-                mathes_df[FootballField.RESULT.value] = league.year_start + i
+                mathes_df[FootballField.SEASON.value] = league.year_start + i
                 matches.append(mathes_df)
             except:
                 break

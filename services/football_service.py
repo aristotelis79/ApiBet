@@ -1,8 +1,9 @@
 
-from typing import Union
 import pandas as pd
+from typing import Union
 from entities.league import League
 from entities.league_config import LeagueConfig
+from preprocessing.statistics import StatisticsEngine
 from repository.league_repository import LeagueRepository
 from services.football_new_result_service import FootballNewResultService
 from services.football_result_service import FootballResultService
@@ -34,19 +35,27 @@ class FootballService:
 
         league_config = LeagueConfig(league.country,league.name)
 
-        self._leagueRepository.save_league(df=matches, league=league, league_config=league_config)
+        matches = self._compute_statistics(matches, league_config)
 
+        self._leagueRepository.save_league(df=matches, league=league, league_config=league_config)
+        #self._leagueRepository.to_csv(df = matches,league=league)
+        
         return matches
 
-    def update_league(self, league: League) -> None:
-        league_config = self._leagueRepository.get_league_config(league.country,league.name)
+    def update_league(self, country: str, division: str) -> Union[pd.DataFrame,None]:
+        league = self._leagueRepository.get_league(country=country, division=division)
 
-        if league_config is None:
+        if league is None:
             return None
 
         if  self._leagueRepository.delete_league(league=league) is False:
-            return None            
+            return None
+
+        return self.get_or_create_league(country, division)
     
-        return  self._leagueRepository.create_league(
-            league=league,
-            league_config = league_config)
+    def _compute_statistics(self, df: pd.DataFrame,league_config: LeagueConfig) -> pd.DataFrame:
+        return StatisticsEngine(
+            matches_df=df,
+            last_n_matches=league_config.last_n_matches,
+            goal_diff_margin=league_config.goal_diff_margin
+        ).compute_statistics(statistic_columns=league_config.statistic_columns)

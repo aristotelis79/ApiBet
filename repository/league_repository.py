@@ -9,7 +9,6 @@ import pyarrow.parquet as pq
 from typing import Union
 from entities.league import League
 from entities.league_config import LeagueConfig
-from preprocessing.statistics import StatisticsEngine
 
 class LeagueRepository:
 
@@ -46,14 +45,8 @@ class LeagueRepository:
         
         if self._league_exists(league.country, league.name) and update_on_exist is False:
             return None
-        
-        matches_df = StatisticsEngine(
-            matches_df=df,
-            last_n_matches=league_config.last_n_matches,
-            goal_diff_margin=league_config.goal_diff_margin
-        ).compute_statistics(statistic_columns=league_config.statistic_columns)
 
-        table = pa.Table.from_pandas(matches_df)
+        table = pa.Table.from_pandas(df)
         pa.parquet.write_table(table, self._league_table_path(league.country, league.name))
 
         self._save_league_config(league_config)
@@ -99,5 +92,5 @@ class LeagueRepository:
 
     def _save_league_config(self, league_config: LeagueConfig) -> None:
         with open(self._league_config_path(league_config.country, league_config.name),
-                   'r', encoding=encodings.utf_8.getregentry().name) as fp:
-            json.dump(league_config, fp)
+                   'w', encoding=encodings.utf_8.getregentry().name) as fp:
+            json.dump(league_config.__dict__, fp)

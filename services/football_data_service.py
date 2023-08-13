@@ -8,7 +8,7 @@ class FootballDataService(ABC):
         matches = self._download(league=league)
         matches = self._get_fixtures(matches)
         matches = matches.drop_duplicates()
-        matches = matches.iloc[::1].reset_index(drop=True)
+        matches = matches.iloc[::-1].reset_index(drop=True)
         return matches
 
     @abstractmethod
