@@ -5,3 +5,5 @@ requests
 numpy
 pyarrow
 tensorflow
+sklearn
+imblearn
