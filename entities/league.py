@@ -1,5 +1,4 @@
 class League:
-
     def  __init__(
             self,
             country: str,

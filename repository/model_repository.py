@@ -13,7 +13,7 @@ class ModelRepository:
     def store_model(self, model: Model, league_country: str, league_name: str):
         model.save(f'{self._checkpoint_directory(league_country, league_name)}{model.get_model_name()}')
 
-    def get_all_models(self, league_country: str, league_name: str) -> list or None:
+    def get_all_models(self, league_country: str, league_name: str) -> list | None:
         checkpoint_directory = self._checkpoint_directory(league_country, league_name)
         if not os.path.exists(checkpoint_directory):
             return None
@@ -26,7 +26,7 @@ class ModelRepository:
             league_country: str,
             model_name: str,
             input_shape: tuple,
-            random_seed: int) -> Model or None:
+            random_seed: int) -> Model | None:
         checkpoint_filepath = self._checkpoint_train_model_directory(league_country,league_name, model_name)
         if os.path.exists(checkpoint_filepath) is False:
             return None

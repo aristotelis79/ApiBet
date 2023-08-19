@@ -4,9 +4,8 @@ from imblearn.over_sampling import SVMSMOTE
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 from sklearn.svm import SVC
 from models.metric import Metric
-
-from services.football_fields import Result
-
+from services.football.football_fields import Result
+from models.model import Model
 
 class Model(ABC):
     def __init__(self, input_shape: tuple, random_seed: int):
@@ -56,14 +55,13 @@ class Model(ABC):
             y_train: np.ndarray,
             x_test: np.ndarray,
             y_test: np.ndarray,
-            use_over_sampling: bool
-    ) -> dict:
+            use_over_sampling: bool) -> dict:
         if use_over_sampling:
             x_train, y_train = SVMSMOTE(
                 n_jobs=-1,
                 random_state=self.random_seed,
                 svm_estimator=SVC(random_state=self.random_seed)
-            ).fit_resample(x_train, y_train)
+            ).fit_resample(x_train, y_train) 
 
         self._train(x_train=x_train, y_train=y_train, x_test=x_test, y_test=y_test)
         return self.evaluate(x_test=x_test, y_true=y_test)
@@ -90,10 +88,10 @@ class Model(ABC):
         recall = self.metric(recall_score(y_true=y_actual, y_pred=y_pred, average=None))
 
         return {
-                Metric.ACCURACY: round(accuracy_score(y_true=y_actual, y_pred=y_pred)*100, 2), 
-                Metric.F1: f1,
-                Metric.PRECISION: precision,
-                Metric.RECALL: recall
+                Metric.ACCURACY.value : round(accuracy_score(y_true=y_actual, y_pred=y_pred)*100, 2), 
+                Metric.F1.value : f1,
+                Metric.PRECISION.value : precision,
+                Metric.RECALL.value : recall
             }
 
     def metric(self, metric_val):

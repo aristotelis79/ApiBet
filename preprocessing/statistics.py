@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from services.football_fields import FootballField, Result
+from services.football.football_fields import FootballField, Result
 
 class StatisticsEngine:
     Columns = [

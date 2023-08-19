@@ -1,7 +1,7 @@
 import pandas as pd
 from entities.league import League
-from services.football_fields import FootballField
-from services.football_data_service import FootballDataService
+from services.football.football_fields import FootballField
+from services.football.football_data_service import FootballDataService
 
 class FootballNewResultService(FootballDataService):
 
@@ -17,7 +17,6 @@ class FootballNewResultService(FootballDataService):
             'AvgH': FootballField.HOMEPERCENT.value,
             'AvgD': FootballField.DRAWPERCENT.value,
             'AvgA': FootballField.AWAYPERCENT.value,
-            'Res': FootballField.RESULT.value,
-        })
+            'Res': FootballField.RESULT.value,})
 
         return matches

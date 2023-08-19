@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import tensorflow.keras.utils as utils
-from services.football_fields import FootballField, Result
+from services.football.football_fields import FootballField, Result
 
 def _columnus():
     return [FootballField.SEASON.value, FootballField.DATE.value, FootballField.RESULT.value,
@@ -14,8 +14,7 @@ def preprocess_training_dataframe(matches_df: pd.DataFrame, one_hot: bool) -> (n
     targets = matches_df[FootballField.SEASON.value].replace({
             Result.HOMEWIN.value : 0,
             Result.DRAW.value : 1,
-            Result.AWAYWIN.value : 2
-        }).to_numpy(dtype=np.int64)
+            Result.AWAYWIN.value : 2}).to_numpy(dtype=np.int64)
 
     if one_hot:
         targets = utils.to_categorical(targets)
@@ -28,8 +27,7 @@ def construct_input_from_team_names(
         away_team: str,
         odd_1: float,
         odd_x: float,
-        odd_2: float
-) -> np.ndarray:
+        odd_2: float) -> np.ndarray:
     home_team_row = matches_df[matches_df[FootballField.HOMETEAM.value] == home_team].head(1).drop(columns=_columnus())
     away_team_row = matches_df[matches_df[FootballField.AWAYTEAM.value] == away_team].head(1).drop(columns=_columnus())
     return np.hstack((
@@ -40,8 +38,7 @@ def construct_input_from_team_names(
 
 def construct_inputs_from_fixtures(
         matches_df: pd.DataFrame,
-        fixtures_df: pd.DataFrame
-) -> np.ndarray:
+        fixtures_df: pd.DataFrame) -> np.ndarray:
     return np.vstack([
         construct_input_from_team_names(
             matches_df=matches_df,
@@ -49,16 +46,13 @@ def construct_inputs_from_fixtures(
             away_team=match[FootballField.AWAYTEAM.value],
             odd_1=match[FootballField.HOMEPERCENT.value],
             odd_x=match[FootballField.DRAWPERCENT.value],
-            odd_2=match[FootballField.AWAYPERCENT.value]
-        )
-        for _, match in fixtures_df.iterrows()
-    ])
+            odd_2=match[FootballField.AWAYPERCENT.value])
+        for _, match in fixtures_df.iterrows()])
 
 def split_train_targets(
         inputs: np.ndarray,
         targets: np.ndarray,
-        num_eval_samples: int
-) -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray):
+        num_eval_samples: int) -> (np.ndarray, np.ndarray, np.ndarray, np.ndarray):
     x_train = inputs[num_eval_samples:]
     y_train = targets[num_eval_samples:]
     x_test = inputs[: num_eval_samples]

@@ -5,5 +5,8 @@ requests
 numpy
 pyarrow
 tensorflow
-sklearn
+tensorflow-addons
+scikit-learn
 imblearn
+optuna
+xgboost

@@ -2,8 +2,8 @@
 import pandas as pd
 from datetime import date
 from entities.league import League
-from services.football_fields import FootballField
-from services.football_data_service import FootballDataService
+from services.football.football_fields import FootballField
+from services.football.football_data_service import FootballDataService
 
 class FootballResultService(FootballDataService):
     

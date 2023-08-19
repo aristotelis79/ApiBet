@@ -61,8 +61,7 @@ class Tuner(ABC):
             y_train=self.y_train,
             x_test=self.x_test,
             y_test=self.y_test,
-            use_over_sampling=use_over_sampling
-        )
+            use_over_sampling=use_over_sampling)
         y_pred, _ = model.predict(x=self.x_test)
         return self._evaluate(y_true=self.y_test, y_pred=y_pred)
 

@@ -5,8 +5,8 @@ from entities.league import League
 from entities.league_config import LeagueConfig
 from preprocessing.statistics import StatisticsEngine
 from repository.league_repository import LeagueRepository
-from services.football_new_result_service import FootballNewResultService
-from services.football_result_service import FootballResultService
+from services.football.football_new_result_service import FootballNewResultService
+from services.football.football_result_service import FootballResultService
 
 class FootballService:
 

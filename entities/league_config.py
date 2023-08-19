@@ -1,7 +1,6 @@
 from preprocessing.statistics import StatisticsEngine
 
 class LeagueConfig:
-
     def  __init__(
             self,
             country: str,
