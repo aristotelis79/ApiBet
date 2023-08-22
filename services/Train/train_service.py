@@ -50,17 +50,18 @@ class TrainService(ABC):
     def num_eval_samples_var(self) -> int:
         return self._num_eval_samples_var
 
-    def train(self, metric_name: str, metric_target: str) -> Model:
-        if metric_name == Metric.ACCURACY.value:
-            metric = lambda y_true, y_pred: accuracy_score(y_true=y_true, y_pred=y_pred)
-        elif metric_name == Metric.F1.value:
-            metric = lambda y_true, y_pred: f1_score(y_true=y_true, y_pred=y_pred, average=None)[metric_target]
-        elif metric_name == Metric.PRECISION.value:
-            metric = lambda y_true, y_pred: precision_score(y_true=y_true, y_pred=y_pred, average=None)[metric_target]
-        elif metric_name == Metric.RECALL.value:
-            metric = lambda y_true, y_pred: recall_score(y_true=y_true, y_pred=y_pred, average=None)[metric_target]
-        else:
-            raise NotImplementedError(f'Error: Metric "{metric_name}" has not been implemented yet')
+    def train(self, metric_name: str, metric_target: str):
+        match metric_name:
+            case Metric.ACCURACY.value:
+                metric = lambda y_true, y_pred: accuracy_score(y_true=y_true, y_pred=y_pred)
+            case Metric.F1.value:
+                metric = lambda y_true, y_pred: f1_score(y_true=y_true, y_pred=y_pred, average=None)[metric_target]
+            case Metric.PRECISION.value:
+                metric = lambda y_true, y_pred: precision_score(y_true=y_true, y_pred=y_pred, average=None)[metric_target]
+            case Metric.RECALL.value:
+                metric = lambda y_true, y_pred: recall_score(y_true=y_true, y_pred=y_pred, average=None)[metric_target]
+            case _:
+                raise NotImplementedError(f'Error: Metric "{metric_name}" has not been implemented yet')
         
         tuner = self._construct_tuner(
             n_trials=self._n_trials_var,

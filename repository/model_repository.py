@@ -26,7 +26,7 @@ class ModelRepository:
             league_country: str,
             model_name: str,
             input_shape: tuple,
-            random_seed: int) -> Model | None:
+            random_seed: int):
         checkpoint_filepath = self._checkpoint_train_model_directory(league_country,league_name, model_name)
         if os.path.exists(checkpoint_filepath) is False:
             return None

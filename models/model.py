@@ -5,7 +5,6 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 from sklearn.svm import SVC
 from models.metric import Metric
 from services.football.football_fields import Result
-from models.model import Model
 
 class Model(ABC):
     def __init__(self, input_shape: tuple, random_seed: int):

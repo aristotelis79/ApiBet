@@ -44,7 +44,8 @@ def train(
     
     match model:
         case constants.NN_MODEL_NAME :
-            train_model = TuningNNService(random_seed=0,matches_df=matches).train(metric_name=metric,metric_target=target)
+            train_model = TuningNNService(random_seed=0,matches_df=matches)
+            train_model = train_model.train(metric_name=metric,metric_target=target)
             model_repository.store_model(model=train_model,league_country=country,league_name=division)
         case constants.RF_MODEL_NAME :
             raise NotImplementedError(f'Model "{model}" has not been implemented yet')

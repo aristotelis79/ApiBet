@@ -11,21 +11,22 @@ class TuningNNService(TrainService):
     def __init__(
             self,
             random_seed: int,
-            matches_df: pd.DataFrame):
+            matches_df: pd.DataFrame,
+            one_hot:bool=True):
         super().__init__(
             random_seed=random_seed,
             matches_df=matches_df,
-            one_hot=True)
+            one_hot=one_hot)
         self._epochs_var = 80
         self._early_stopping_epochs_var = 35
-        self._learning_rate_decay_factor_var = '0.2'
+        self._learning_rate_decay_factor_var = 0.2
         self._learning_rate_decay_epochs_var = 10
         self._min_layers_var = 3
         self._max_layers_var = 5
         self._min_units_var = 32
         self._max_units_var = 128
         self._units_increment_var = 16
-        self._text = None
+        self._one_hot = one_hot
 
     def _construct_tuner(
             self,
@@ -38,17 +39,18 @@ class TuningNNService(TrainService):
             n_trials=n_trials,
             metric=metric,
             matches_df=matches_df,
+            random_seed=random_seed,
             num_eval_samples=num_eval_samples,
             epochs=self._epochs_var,
             early_stopping_epochs=self._early_stopping_epochs_var,
-            learning_rate_decay_factor=float(self._learning_rate_decay_factor_var),
+            learning_rate_decay_factor=self._learning_rate_decay_factor_var,
             learning_rate_decay_epochs=self._learning_rate_decay_epochs_var,
             min_layers=self._min_layers_var,
             max_layers=self._max_layers_var,
             min_units=self._min_units_var,
             max_units=self._max_units_var,
             units_increment=self._units_increment_var,
-            random_seed=random_seed)
+            one_hot=self._one_hot)
 
     def _construct_model(self, input_shape: tuple, random_seed: int) -> Model:
         return FCNet(input_shape=input_shape, random_seed=random_seed)

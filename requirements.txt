@@ -4,9 +4,10 @@ pandas
 requests
 numpy
 pyarrow
-tensorflow
 tensorflow-addons
 scikit-learn
 imblearn
 optuna
-xgboost
+matplotlib
+seaborn
+scipy

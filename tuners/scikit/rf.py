@@ -1,6 +1,6 @@
 import constants
 import pandas as pd
-from models.scikit.rf import RandomForest
+from train_models.scikit.rf import RandomForest
 from tuners.tuner import Tuner
 
 class RandomForestTuner(Tuner):

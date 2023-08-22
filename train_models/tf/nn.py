@@ -58,9 +58,7 @@ class FCNet(Model):
             regularizer = regularizations[i]
             batch_norm = batch_normalizations[i]
             dropout = dropouts[i]
-
-            model.add(
-                tf.keras.layers.Dense(
+            model.add(tf.keras.layers.Dense(
                     units=units,
                     activation=activations[i],
                     use_bias=not batch_norm,
@@ -70,8 +68,8 @@ class FCNet(Model):
                 model.add(tf.keras.layers.BatchNormalization())
             if dropout > 0.0:
                 model.add(tf.keras.layers.Dropout(rate=dropout))
-        model.add(tf.keras.layers.Dense(units=3, activation='softmax'))
 
+        model.add(tf.keras.layers.Dense(units=3, activation='softmax'))
         model.compile(
             optimizer=optimizer,
             loss='categorical_crossentropy',

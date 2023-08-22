@@ -10,6 +10,7 @@ class FCNetTuner(Tuner):
             n_trials: int,
             metric,
             matches_df: pd.DataFrame,
+            random_seed: int,
             num_eval_samples: int,
             epochs: int,
             early_stopping_epochs: int,
@@ -20,12 +21,12 @@ class FCNetTuner(Tuner):
             min_units: int,
             max_units: int,
             units_increment: int,
-            random_seed: int):
+            one_hot:bool = True):
         super().__init__(
             n_trials=n_trials,
             metric=metric,
             matches_df=matches_df,
-            one_hot=True,
+            one_hot=one_hot,
             num_eval_samples=num_eval_samples,
             random_seed=random_seed)
 
@@ -39,7 +40,7 @@ class FCNetTuner(Tuner):
         self._max_units = max_units
         self._units_increment = units_increment
 
-    def _create_model(self, trial) -> Model:
+    def _create_model(self, trial) -> FCNet:
         batch_size = trial.suggest_categorical(constants.BATCH_SIZE, [16, 32, 64, 128, 256])
 
         model = FCNet(

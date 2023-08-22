@@ -11,7 +11,7 @@ def _columnus():
 def preprocess_training_dataframe(matches_df: pd.DataFrame, one_hot: bool) -> (np.ndarray, np.ndarray):
     inputs = matches_df.dropna().drop(columns=_columnus())
     inputs = inputs.to_numpy(dtype=np.float64)
-    targets = matches_df[FootballField.SEASON.value].replace({
+    targets = matches_df[FootballField.RESULT.value].replace({
             Result.HOMEWIN.value : 0,
             Result.DRAW.value : 1,
             Result.AWAYWIN.value : 2}).to_numpy(dtype=np.int64)
