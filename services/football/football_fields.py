@@ -32,3 +32,4 @@ class Result(Enum):
     HOMEWIN = 'H'
     DRAW = 'D'
     AWAYWIN = 'A'
+    ALL = [HOMEWIN, DRAW, AWAYWIN]

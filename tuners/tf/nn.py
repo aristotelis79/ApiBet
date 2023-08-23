@@ -2,7 +2,6 @@ import constants
 import pandas as pd
 from train_models.tf.nn import FCNet
 from tuners.tuner import Tuner
-from models.model import Model
 
 class FCNetTuner(Tuner):
     def __init__(

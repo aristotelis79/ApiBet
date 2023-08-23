@@ -6,8 +6,7 @@ class LeagueConfig:
             country: str,
             name: str,
             last_n_matches: int = 5,
-            goal_diff_margin: int = 3
-            ) -> None:
+            goal_diff_margin: int = 3) -> None:
         self._country = country
         self._name = name
         self._last_n_matches = last_n_matches

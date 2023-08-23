@@ -6,8 +6,7 @@ class League:
             fixtures_url: str,
             year_start: int,
             league_type: str,
-            upcoming_fixtures_url: str
-            ) -> None:
+            upcoming_fixtures_url: str) -> None:
         self._country = country
         self._name = name
         self._fixtures_url = fixtures_url

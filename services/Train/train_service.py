@@ -50,7 +50,7 @@ class TrainService(ABC):
     def num_eval_samples_var(self) -> int:
         return self._num_eval_samples_var
 
-    def train(self, metric_name: str, metric_target: str):
+    def train(self, metric_name: str, metric_target: str) -> (Model,dict or None):
         match metric_name:
             case Metric.ACCURACY.value:
                 metric = lambda y_true, y_pred: accuracy_score(y_true=y_true, y_pred=y_pred)
@@ -68,15 +68,19 @@ class TrainService(ABC):
             metric=metric,
             matches_df=self._matches_df,
             num_eval_samples=self._num_eval_samples_var,
-            random_seed=self._random_seed) 
+            random_seed=self._random_seed)
+         
         self._best_params = tuner.tune()
-        self._train(
+        
+        model = self._train(
             x_train=tuner.x_train,
             y_train=tuner.y_train,
             x_test=tuner.x_test,
             y_test=tuner.y_test,
             random_seed=self._random_seed,
             best_params=self._best_params)
+        
+        return (model, self._eval_metrics)
         
     def _train(
             self,

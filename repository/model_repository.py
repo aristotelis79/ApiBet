@@ -22,11 +22,11 @@ class ModelRepository:
 
     def load_model(
             self,
-            league_name: str,
             league_country: str,
+            league_name: str,
             model_name: str,
             input_shape: tuple,
-            random_seed: int):
+            random_seed: int=0):
         checkpoint_filepath = self._checkpoint_train_model_directory(league_country,league_name, model_name)
         if os.path.exists(checkpoint_filepath) is False:
             return None
