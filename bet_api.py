@@ -74,7 +74,7 @@ def model(
 
     model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=inputs.shape[1:])
 
-    _, _, metrics = model.evaluate(matches_df=matches)
+    _, _, metrics = model.evaluate_scores(matches_df=matches)
 
     return metrics
 

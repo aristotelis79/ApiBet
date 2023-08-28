@@ -92,7 +92,7 @@ class Model(ABC):
                 Metric.RECALL.value : Model.scores(recall_score(y_true=y_actual, y_pred=y_pred, average=None))
             }
     
-    def evaluate(
+    def evaluate_scores(
             self, 
             matches_df: DataFrame,
             one_hot: bool = False) -> (np.ndarray, np.ndarray, dict):
