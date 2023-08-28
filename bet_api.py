@@ -3,10 +3,11 @@ import constants
 import json
 from models.model import Model
 from repository.model_repository import ModelRepository
+from services.football.football_fields import Result
 from services.football.football_service import FootballService
 from fastapi import Depends, FastAPI
 from services.train.tunning_nn_service import TuningNNService
-from preprocessing.training import preprocess_training_dataframe
+from preprocessing.training import preprocess_training_dataframe,construct_input_from_team_names,_columnus
 
 api = FastAPI()
 
@@ -69,13 +70,45 @@ def model(
     if matches is None:
         return
     
-    input, _ = preprocess_training_dataframe(matches_df=matches, one_hot=one_hot)
+    inputs, _ = preprocess_training_dataframe(matches_df=matches, one_hot=one_hot)
 
-    model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=input.shape[1:])
+    model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=inputs.shape[1:])
 
-    x, y, metrics = model.evaluate(matches_df=matches)
+    _, _, metrics = model.evaluate(matches_df=matches)
 
     return metrics
+
+@api.get("/predict/{model_name}/{country}/{division}/{home_team}/{away_team}/{home_odd}/{draw_odd}/{away_odd}")
+def predict(
+    model_name: str,
+    country: str, 
+    division: str, 
+    home_team: str,
+    away_team: str,
+    home_odd: float,
+    draw_odd: float,
+    away_odd: float,
+    footbal_service: FootballService = Depends(),
+    model_repository: ModelRepository = Depends()):
+    matches = footbal_service.get_or_create_league(country, division)
+
+    inputs = construct_input_from_team_names(
+        matches_df=matches,
+        home_team=home_team,
+        away_team=away_team,
+        home_odd=home_odd,
+        draw_odd=draw_odd,
+        away_odd=away_odd
+    )
+
+    model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=inputs.shape[1:])
+    y_pred, predict_proba = model.predict(x=inputs)
+    
+    return { 
+        Result.HOMEWIN.value: str(predict_proba[0][0]),
+        Result.DRAW.value: str(predict_proba[0][1]),
+        Result.AWAYWIN.value: str(predict_proba[0][2]),
+    }
 
 if __name__ == '__main__':
     import uvicorn

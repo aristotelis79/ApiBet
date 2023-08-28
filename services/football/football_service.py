@@ -22,7 +22,7 @@ class FootballService:
         matches = self._leagueRepository.load_league(league=league)
 
         if matches is not None:
-            #self._leagueRepository.to_csv(df = matches,league=league)
+            self._leagueRepository.to_csv(df = matches,league=league)
             return matches
 
         if league.league_type == 'main':
@@ -38,7 +38,7 @@ class FootballService:
         matches = self._compute_statistics(matches, league_config)
 
         self._leagueRepository.save_league(df=matches, league=league, league_config=league_config)
-        #self._leagueRepository.to_csv(df = matches,league=league)
+        self._leagueRepository.to_csv(df = matches,league=league)
         
         return matches
 

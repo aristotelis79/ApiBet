@@ -25,13 +25,13 @@ def construct_input_from_team_names(
         matches_df: pd.DataFrame,
         home_team: str,
         away_team: str,
-        odd_1: float,
-        odd_x: float,
-        odd_2: float) -> np.ndarray:
+        home_odd: float,
+        draw_odd: float,
+        away_odd: float) -> np.ndarray:
     home_team_row = matches_df[matches_df[FootballField.HOMETEAM.value] == home_team].head(1).drop(columns=_columnus())
     away_team_row = matches_df[matches_df[FootballField.AWAYTEAM.value] == away_team].head(1).drop(columns=_columnus())
     return np.hstack((
-        np.float64([odd_1, odd_x, odd_2]),
+        np.float64([home_odd, draw_odd, away_odd]),
         home_team_row[[col for col in home_team_row.columns if col[0] == Result.HOMEWIN.value ]].to_numpy(dtype=np.float64).flatten(),
         away_team_row[[col for col in home_team_row.columns if col[0] == Result.AWAYWIN.value]].to_numpy(dtype=np.float64).flatten()
     )).reshape((1, -1))
