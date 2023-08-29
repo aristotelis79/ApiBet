@@ -68,3 +68,16 @@ def get_all_predictions(x: np.ndarray, models: list) -> (np.ndarray, np.ndarray)
     y_prob = sum_predict_proba / len(models)
     y_pred = np.argmax(y_prob, axis=1)
     return y_pred, y_prob
+
+def filter_matches_by_odd(filter: str, matches_df: pd.DataFrame) -> pd.DataFrame:
+    target_column, odd_range = filter.split(':')
+    if(odd_range[0] == '>'):
+        left_range = float(odd_range[1:])
+        right_range = 100.0
+    else:
+        ranges = odd_range[1: -1].replace(' ', '').split('-')
+        left_range = float(ranges[0])
+        right_range = float(ranges[1])
+    filtered_ids = (matches_df[target_column] >= left_range) & (matches_df[target_column] <= right_range)
+    filtered_df = matches_df[filtered_ids]
+    return filtered_df
