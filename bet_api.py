@@ -73,10 +73,22 @@ def model(
     
     inputs, _ = preprocess_training_dataframe(matches_df=matches, one_hot=one_hot)
 
-    model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=inputs.shape[1:])
-
-    _, _, metrics = model.evaluate_scores(matches_df=matches)
-
+    match model_name:
+        case constants.NN_MODEL_NAME | constants.RF_MODEL_NAME :
+            model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=inputs.shape[1:])
+            _, _, metrics = model.evaluate_scores(matches_df=matches)
+        case constants.ALL_MODEL_NAME:
+            models = [
+                model_repository.load_model(league_country=country, league_name=division, model_name=name,input_shape=inputs.shape[1:])
+                for name in model_repository.get_all_models(league_country=country, league_name=division)
+            ]
+            metrics = {}
+            for model in models:
+                _, _, metric = model.evaluate_scores(matches_df=matches)
+                metrics[model.get_model_name()] = metric
+        case _ :
+            raise NotImplementedError(f'Model "{model_name}" has not been implemented yet')
+        
     return metrics
 
 @api.get("/predict/{model_name}/{country}/{division}/{home_team}/{away_team}/{home_odd}/{draw_odd}/{away_odd}")
