@@ -59,7 +59,7 @@ def split_train_targets(
     y_test = targets[: num_eval_samples]
     return x_train, y_train, x_test, y_test
 
-def get_ensemble_predictions(x: np.ndarray, models: list) -> (np.ndarray, np.ndarray):
+def get_all_predictions(x: np.ndarray, models: list) -> (np.ndarray, np.ndarray):
     sum_predict_proba = np.zeros(shape=(x.shape[0], 3), dtype=np.float64)
 
     for model in models:

@@ -10,12 +10,13 @@ class RandomForestTuner(Tuner):
             metric,
             matches_df: pd.DataFrame,
             num_eval_samples: int,
-            random_seed: int = 0):
+            random_seed: int = 0,
+            one_hot=False):
         super().__init__(
             n_trials=n_trials,
             metric=metric,
             matches_df=matches_df,
-            one_hot=False,
+            one_hot=one_hot,
             num_eval_samples=num_eval_samples,
             random_seed=random_seed)
 

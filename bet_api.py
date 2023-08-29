@@ -1,4 +1,3 @@
-from fastapi.responses import JSONResponse
 import constants
 import json
 from models.model import Model
@@ -7,7 +6,8 @@ from services.football.football_fields import Result
 from services.football.football_service import FootballService
 from fastapi import Depends, FastAPI
 from services.train.tunning_nn_service import TuningNNService
-from preprocessing.training import preprocess_training_dataframe,construct_input_from_team_names,_columnus
+from preprocessing.training import preprocess_training_dataframe,construct_input_from_team_names,get_all_predictions
+from services.train.tunning_rf_service import TunningRFService
 
 api = FastAPI()
 
@@ -51,7 +51,8 @@ def train(
             model, model_eval = TuningNNService(random_seed=0,matches_df=matches).train(metric_name=metric,metric_target=target)
             model_repository.store_model(model=model,league_country=country,league_name=division)
         case constants.RF_MODEL_NAME :
-            raise NotImplementedError(f'Model "{model_name}" has not been implemented yet')
+            model, model_eval = TunningRFService(random_seed=0,matches_df=matches).train(metric_name=metric,metric_target=target)
+            model_repository.store_model(model=model,league_country=country,league_name=division)
         case _ :
             raise NotImplementedError(f'Model "{model_name}" has not been implemented yet')
     
@@ -101,9 +102,19 @@ def predict(
         away_odd=away_odd
     )
 
-    model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=inputs.shape[1:])
-    y_pred, predict_proba = model.predict(x=inputs)
-    
+    match model_name:
+        case constants.NN_MODEL_NAME | constants.RF_MODEL_NAME :
+            model = model_repository.load_model(league_country=country, league_name=division, model_name=model_name,input_shape=inputs.shape[1:])
+            y_pred, predict_proba = model.predict(x=inputs)
+        case constants.ALL_MODEL_NAME:
+            models = [
+                model_repository.load_model(league_country=country, league_name=division, model_name=name,input_shape=inputs.shape[1:])
+                for name in model_repository.get_all_models(league_country=country, league_name=division)
+            ]
+            y_pred, predict_proba = get_all_predictions(x=inputs, models=models)
+        case _ :
+            raise NotImplementedError(f'Model "{model_name}" has not been implemented yet')
+        
     return { 
         Result.HOMEWIN.value: str(predict_proba[0][0]),
         Result.DRAW.value: str(predict_proba[0][1]),

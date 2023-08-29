@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM nvcr.io/nvidia/tensorflow:23.07-tf2-py3
+FROM python:3
 
 RUN apt-get update 
 
